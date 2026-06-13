@@ -109,6 +109,15 @@ export const bodySystemNodes = [
   },
 ];
 
+export interface MedicationDetail {
+  name: string;          // 약물 이름 (한글)
+  english: string;       // 영문/성분명
+  brands: string;        // 한국 대표 상품명
+  action: string;        // 작용 기전
+  sideEffects: { label: string; severity: "mild" | "moderate" | "severe" }[];
+  note?: string;
+}
+
 export const hypertensionFactors = [
   {
     id: "volume",
@@ -119,9 +128,49 @@ export const hypertensionFactors = [
       "혈관 내 혈액의 양이 많아질수록 혈관 벽에 가해지는 압력이 커집니다. 마치 수도관에 물이 많이 흐를수록 압력이 높아지는 것과 같습니다.",
     mechanism:
       "나트륨 과다 섭취 → 신장에서 수분 저류 → 혈액량 증가 → 혈압 상승",
-    medications: ["이뇨제 (Diuretics): 신장을 통해 나트륨·수분을 배출시켜 혈액량을 줄임"],
-    medicationNote:
-      "부작용 가능성: 전해질 불균형, 잦은 배뇨, 마그네슘·칼륨 손실, 혈당 영향 가능",
+    medications: [
+      {
+        name: "티아지드계 이뇨제",
+        english: "Thiazide Diuretics / Hydrochlorothiazide",
+        brands: "다이크로짇®, 히드로클로로티아짓",
+        action: "신장 원위세뇨관에서 나트륨·수분 재흡수를 억제하여 혈액량을 줄임. 한국에서 1차 선택 이뇨제로 자주 사용.",
+        sideEffects: [
+          { label: "저칼륨혈증 (근육 경련, 피로)", severity: "moderate" },
+          { label: "저마그네슘혈증", severity: "moderate" },
+          { label: "혈당 상승 (당뇨 전단계 주의)", severity: "moderate" },
+          { label: "요산 증가 (통풍 악화 가능)", severity: "moderate" },
+          { label: "잦은 배뇨 (특히 복용 초기)", severity: "mild" },
+          { label: "성욕 감소 (일부 환자)", severity: "mild" },
+          { label: "저나트륨혈증 (고령자 특히 주의)", severity: "severe" },
+        ],
+      },
+      {
+        name: "루프 이뇨제",
+        english: "Loop Diuretics / Furosemide",
+        brands: "라식스®(Lasix), 후로세마이드",
+        action: "헨레고리 상행각에서 나트륨·염소 재흡수 억제. 티아지드보다 강력한 이뇨 효과. 심부전·신부전에 주로 사용.",
+        sideEffects: [
+          { label: "심한 저칼륨혈증·저마그네슘혈증", severity: "severe" },
+          { label: "탈수 및 저혈압", severity: "moderate" },
+          { label: "청력 손상 (고용량, 드물게)", severity: "severe" },
+          { label: "요산 증가", severity: "moderate" },
+          { label: "혈당 상승", severity: "moderate" },
+        ],
+        note: "심부전이나 신부전 동반 시 주로 사용. 단순 고혈압에는 티아지드가 우선.",
+      },
+      {
+        name: "알도스테론 길항제",
+        english: "Aldosterone Antagonist / Spironolactone",
+        brands: "알닥톤®(Aldactone), 스피로노락톤",
+        action: "알도스테론 수용체 차단 → 나트륨 배출·칼륨 보존. 저항성 고혈압, 심부전에 사용. 칼륨보존 이뇨제.",
+        sideEffects: [
+          { label: "고칼륨혈증 (ACE억제제·ARB 병용 시 위험)", severity: "severe" },
+          { label: "여성형 유방(남성), 월경 불순(여성)", severity: "moderate" },
+          { label: "성욕 감소, 발기부전", severity: "moderate" },
+          { label: "두통, 졸음", severity: "mild" },
+        ],
+      },
+    ] as MedicationDetail[],
     lifestyleFactors: ["나트륨(소금) 섭취 줄이기", "충분한 수분 섭취", "가공식품 줄이기", "칼륨 풍부한 식품 섭취"],
     sliderEffect: 25,
   },
@@ -135,11 +184,50 @@ export const hypertensionFactors = [
     mechanism:
       "만성 염증 → 혈관 내막 손상 → 섬유화·석회화 → 혈관 경직 → 혈압 상승",
     medications: [
-      "ACE 억제제: 앤지오텐신 II 생성 억제, 혈관 이완",
-      "칼슘채널차단제 (CCB): 혈관 평활근의 수축 억제",
-    ],
-    medicationNote:
-      "부작용 가능성: ACE 억제제 - 마른기침(약 10-15%), CCB - 발목 부종, 두통",
+      {
+        name: "ACE 억제제",
+        english: "ACE Inhibitors / Enalapril, Ramipril, Perindopril",
+        brands: "레니텍®, 트리테이스®, 아서틸®, 에날라프릴",
+        action: "앤지오텐신 전환효소(ACE)를 억제 → 앤지오텐신 II 생성 감소 → 혈관 이완·알도스테론 감소. 당뇨·신장 보호 효과도 있어 당뇨 합병 고혈압에 자주 선택.",
+        sideEffects: [
+          { label: "마른기침 (한국인 10~30%, 동양인 높음)", severity: "moderate" },
+          { label: "혈관부종 (드물지만 기도 부종 → 응급)", severity: "severe" },
+          { label: "첫 복용 후 저혈압 (특히 이뇨제 병용)", severity: "moderate" },
+          { label: "고칼륨혈증 (신장 기능 저하 시)", severity: "moderate" },
+          { label: "태아 독성 (임신 중 금기)", severity: "severe" },
+          { label: "신기능 초기 악화 (신동맥협착 주의)", severity: "moderate" },
+        ],
+      },
+      {
+        name: "칼슘채널차단제 (DHP계)",
+        english: "Calcium Channel Blocker / Amlodipine, Nifedipine, Lercanidipine",
+        brands: "노바스크®(Norvasc), 암로디핀, 아달라트®, 자니딥®",
+        action: "혈관 평활근 세포의 L형 칼슘 채널 차단 → 혈관 이완 → 혈압 하강. 한국 처방 1위권의 고혈압 약. 협심증 동반 시 특히 유용.",
+        sideEffects: [
+          { label: "발목·하지 부종 (약 10%, 여성에 더 흔함)", severity: "moderate" },
+          { label: "두통·안면 홍조 (초기)", severity: "mild" },
+          { label: "심계항진·두근거림", severity: "mild" },
+          { label: "잇몸 비대 (드물게, 장기 복용)", severity: "mild" },
+          { label: "변비 (특히 베라파밀계)", severity: "mild" },
+        ],
+        note: "암로디핀은 반감기가 길어 하루 1번 복용. 갑자기 끊어도 비교적 안전.",
+      },
+      {
+        name: "아스피린 (항혈소판제)",
+        english: "Aspirin / Acetylsalicylic acid",
+        brands: "아스피린 프로텍트®, 아스트릭스®, 바이엘 아스피린®",
+        action: "혈소판 응집 억제(COX-1 차단) → 혈전 형성 예방. 혈압을 직접 낮추지는 않지만, 심혈관 고위험군에서 심근경색·뇌졸중 2차 예방 목적으로 병용 처방. 저용량(100mg)이 표준.",
+        sideEffects: [
+          { label: "위장 출혈·궤양 (공복 복용 주의)", severity: "moderate" },
+          { label: "뇌출혈 위험 증가 (혈압 미조절 상태에서)", severity: "severe" },
+          { label: "아스피린 천식 (아스피린 과민 환자)", severity: "severe" },
+          { label: "이명, 청력 저하 (고용량 시)", severity: "moderate" },
+          { label: "신기능에 영향 (장기·고용량)", severity: "moderate" },
+          { label: "다른 NSAIDs와 병용 금기", severity: "moderate" },
+        ],
+        note: "1차 예방(심장병 없는 일반인)에서는 출혈 위험이 이득보다 클 수 있어 최근 가이드라인은 고위험군에만 권고. 반드시 의사와 상담 후 결정.",
+      },
+    ] as MedicationDetail[],
     lifestyleFactors: ["규칙적 유산소 운동", "오메가-3 섭취", "비타민 C·E", "금연", "항산화 식품"],
     sliderEffect: 20,
   },
@@ -153,11 +241,47 @@ export const hypertensionFactors = [
     mechanism:
       "앤지오텐신 II / 교감신경 → 혈관 평활근 수축 → 혈관 직경 감소 → 혈압 상승",
     medications: [
-      "ARB (앤지오텐신 수용체 차단제): 혈관 수축 신호 차단, 혈관 확장",
-      "ACE 억제제: 혈관 수축 물질 생산 억제",
-    ],
-    medicationNote:
-      "부작용 가능성: ARB - 일반적으로 잘 견디지만 현기증, 드물게 혈중 칼륨 상승",
+      {
+        name: "ARB (앤지오텐신 수용체 차단제)",
+        english: "ARB / Losartan, Valsartan, Olmesartan, Telmisartan, Irbesartan",
+        brands: "코자®(Cozaar), 디오반®(Diovan), 올메텍®, 미카르디스®, 아프로벨®",
+        action: "앤지오텐신 II의 AT1 수용체를 차단 → 혈관 수축·나트륨 저류 억제. ACE 억제제와 효과 유사하나 마른기침 부작용이 없어 한국에서 ACE 억제제 대신 많이 사용. 당뇨·만성신질환 보호 효과.",
+        sideEffects: [
+          { label: "현기증·기립성 저혈압 (초기)", severity: "mild" },
+          { label: "고칼륨혈증 (ACE억제제 병용 시 위험)", severity: "moderate" },
+          { label: "신기능 초기 악화 (신동맥협착 주의)", severity: "moderate" },
+          { label: "태아 독성 (임신 금기)", severity: "severe" },
+          { label: "드물게 혈관부종", severity: "moderate" },
+        ],
+        note: "ACE 억제제와 ARB 동시 복용은 금기. 마른기침 없어 복약 순응도 좋음.",
+      },
+      {
+        name: "알파차단제",
+        english: "Alpha-blocker / Doxazosin, Prazosin, Terazosin",
+        brands: "카두라®(Cardura), 하이트린®, 독사조신",
+        action: "알파-1 수용체 차단 → 교감신경성 혈관 수축 억제 → 혈관 확장. 전립선 비대증 동반 남성 고혈압 환자에게 특히 유용 (BPH에도 효과).",
+        sideEffects: [
+          { label: "기립성 저혈압·실신 (첫 복용 후 특히 위험, '초회 효과')", severity: "severe" },
+          { label: "두통, 피로감", severity: "mild" },
+          { label: "심부전 악화 가능 (단독 사용 시)", severity: "moderate" },
+          { label: "역행성 사정 (일부 환자)", severity: "mild" },
+        ],
+        note: "취침 전 복용 권장(기립성 저혈압 예방). 단독 1차 치료제로는 잘 쓰지 않음.",
+      },
+      {
+        name: "직접 혈관 확장제",
+        english: "Vasodilator / Hydralazine, Minoxidil",
+        brands: "아프레솔린®(Hydralazine), 미녹시딜",
+        action: "혈관 평활근을 직접 이완시켜 혈관 확장. 저항성 고혈압이나 임신성 고혈압 일부에 사용.",
+        sideEffects: [
+          { label: "반사성 빈맥 (심박수 증가)", severity: "moderate" },
+          { label: "체액 저류 (이뇨제 병용 필요)", severity: "moderate" },
+          { label: "루푸스 유사 증후군 (Hydralazine 고용량·장기)", severity: "moderate" },
+          { label: "다모증 (Minoxidil — 탈모 치료에 역이용)", severity: "mild" },
+        ],
+        note: "주로 다른 약제로 조절 안 될 때 추가하는 3차 선택약.",
+      },
+    ] as MedicationDetail[],
     lifestyleFactors: ["스트레스 관리", "마그네슘 섭취", "비트루트 (산화질소 전구체)", "명상·이완 기법"],
     sliderEffect: 20,
   },
@@ -171,10 +295,51 @@ export const hypertensionFactors = [
     mechanism:
       "교감신경 활성화 / 스트레스 → 심박수·수축력 증가 → 심박출량 증가 → 혈압 상승",
     medications: [
-      "베타차단제 (Beta-blockers): 심박수와 심장 수축력 감소",
-    ],
-    medicationNote:
-      "부작용 가능성: 피로감, 손발 냉감, 혈당 증상 마스킹, 운동 능력 저하, 천식 악화 가능",
+      {
+        name: "베타차단제 (선택적)",
+        english: "Selective Beta-blocker / Bisoprolol, Metoprolol, Atenolol, Nebivolol",
+        brands: "컨코르®(Concor), 베타록®, 아테놀롤, 네비레트®",
+        action: "심장 베타-1 수용체 차단 → 심박수·수축력 감소 → 심박출량 감소 → 혈압 하강. 협심증·심부전·부정맥 동반 시 특히 선호. 비조보롤은 산화질소 효과도 있어 부작용 적음.",
+        sideEffects: [
+          { label: "피로감·무기력증", severity: "moderate" },
+          { label: "손발 냉감 (말초혈관 수축)", severity: "moderate" },
+          { label: "혈당 증상 마스킹 (저혈당 징후 차폐, 당뇨 주의)", severity: "moderate" },
+          { label: "운동 능력 저하 (최대 심박수 제한)", severity: "mild" },
+          { label: "천식·COPD 악화 (비선택적 베타차단제 특히 위험)", severity: "severe" },
+          { label: "발기부전 (일부 환자)", severity: "mild" },
+          { label: "갑자기 끊으면 반동성 혈압 급등·협심증", severity: "severe" },
+          { label: "우울감, 수면장애, 악몽 (지용성 약물)", severity: "mild" },
+        ],
+        note: "천식·COPD 환자는 선택적 베타차단제라도 주의. 반드시 서서히 감량해야 하며, 임의 중단 위험.",
+      },
+      {
+        name: "베타차단제 (비선택적)",
+        english: "Non-selective Beta-blocker / Carvedilol, Propranolol, Labetalol",
+        brands: "딜라트렌®(Carvedilol), 인데랄®(Propranolol), 트란데이트®",
+        action: "베타-1·2 및 알파-1 수용체 차단 (카베딜롤, 라베탈롤). 심부전·심근경색 후 치료, 갑상선중독증, 본태성 진전, 편두통 예방에도 사용.",
+        sideEffects: [
+          { label: "기관지 수축 (천식·COPD 금기에 가까움)", severity: "severe" },
+          { label: "저혈당 마스킹 (당뇨 환자 주의)", severity: "moderate" },
+          { label: "심각한 서맥·방실차단", severity: "severe" },
+          { label: "피로, 우울, 성기능 장애", severity: "moderate" },
+          { label: "말초 혈액순환 저하 (레이노 현상)", severity: "moderate" },
+        ],
+        note: "카베딜롤은 알파차단 효과로 말초 저항도 낮춰 심부전에 선호. 천식 환자에게는 원칙적 금기.",
+      },
+      {
+        name: "이바브라딘 (If 채널 차단제)",
+        english: "If-channel blocker / Ivabradine",
+        brands: "프로코라란®(Procoralan)",
+        action: "동결절의 If 전류 차단 → 심박수만 선택적으로 감소. 베타차단제 사용 불가한 환자(천식 등)에서 심박수 조절 목적. 혈압 직접 저하 효과는 제한적.",
+        sideEffects: [
+          { label: "광시증(밝은 빛 노출 시 섬광, 약 10~15%)", severity: "mild" },
+          { label: "서맥", severity: "moderate" },
+          { label: "두통, 현기증", severity: "mild" },
+          { label: "심방세동 위험 약간 증가", severity: "moderate" },
+        ],
+        note: "심부전 동반 환자에서 베타차단제와 병용하거나, 베타차단제 불내성 시 대안.",
+      },
+    ] as MedicationDetail[],
     lifestyleFactors: ["규칙적 운동 (장기적으로 심박수 감소)", "충분한 수면", "카페인 절제", "이완 기법"],
     sliderEffect: 20,
   },
