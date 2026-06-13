@@ -12,6 +12,7 @@ import StatisticsMiniGame from "./StatisticsMiniGame";
 import LifestyleSimulator from "./LifestyleSimulator";
 import NutrientExplorer from "./NutrientExplorer";
 import DualView from "./DualView";
+import DiabetesPage from "./DiabetesPage";
 import QuizMode from "./QuizMode";
 import FinalReport from "./FinalReport";
 
@@ -27,6 +28,7 @@ const tabs = [
   { id: "lifestyle", label: "🌿 생활습관" },
   { id: "nutrient", label: "🥗 영양소" },
   { id: "dual", label: "⚖️ 두관점" },
+  { id: "diabetes", label: "🍬 당뇨·인슐린" },
   { id: "quiz", label: "❓ 퀴즈" },
   { id: "report", label: "📋 보고서" },
 ];
@@ -86,6 +88,7 @@ export default function AppShell() {
             {activeTab === "lifestyle" && <LifestyleSimulator />}
             {activeTab === "nutrient" && <NutrientExplorer />}
             {activeTab === "dual" && <DualView />}
+            {activeTab === "diabetes" && <DiabetesPage />}
             {activeTab === "quiz" && <QuizMode />}
             {activeTab === "report" && <FinalReport />}
           </motion.div>
@@ -144,6 +147,7 @@ const mobileNavTabs = [
   { id: "bp", label: "혈압", icon: "💧" },
   { id: "chol", label: "콜레", icon: "🔬" },
   { id: "lifestyle", label: "생활", icon: "🌿" },
+  { id: "diabetes", label: "당뇨", icon: "🍬" },
   { id: "quiz", label: "퀴즈", icon: "❓" },
 ];
 

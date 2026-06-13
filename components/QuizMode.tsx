@@ -2,17 +2,20 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { quizQuestions } from "@/data/educationData";
+import { diabetesQuizQuestions } from "@/data/diabetesData";
+
+const allQuizQuestions = [...quizQuestions, ...diabetesQuizQuestions];
 
 export default function QuizMode() {
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
-  const [answers, setAnswers] = useState<(number | null)[]>(Array(quizQuestions.length).fill(null));
+  const [answers, setAnswers] = useState<(number | null)[]>(Array(allQuizQuestions.length).fill(null));
   const [showResult, setShowResult] = useState(false);
   const [finished, setFinished] = useState(false);
 
-  const q = quizQuestions[current];
+  const q = allQuizQuestions[current];
   const isCorrect = selected === q.correct;
-  const score = answers.filter((a, i) => a === quizQuestions[i].correct).length;
+  const score = answers.filter((a, i) => a === allQuizQuestions[i].correct).length;
 
   const handleSelect = (idx: number) => {
     if (selected !== null) return;
@@ -24,7 +27,7 @@ export default function QuizMode() {
   };
 
   const handleNext = () => {
-    if (current < quizQuestions.length - 1) {
+    if (current < allQuizQuestions.length - 1) {
       setCurrent(current + 1);
       setSelected(null);
       setShowResult(false);
@@ -37,12 +40,12 @@ export default function QuizMode() {
     setCurrent(0);
     setSelected(null);
     setShowResult(false);
-    setAnswers(Array(quizQuestions.length).fill(null));
+    setAnswers(Array(allQuizQuestions.length).fill(null));
     setFinished(false);
   };
 
   if (finished) {
-    const pct = Math.round((score / quizQuestions.length) * 100);
+    const pct = Math.round((score / allQuizQuestions.length) * 100);
     return (
       <div className="px-4 py-6 max-w-2xl mx-auto">
         <div className="mb-6">
@@ -57,7 +60,7 @@ export default function QuizMode() {
             {pct >= 80 ? "🏆" : pct >= 60 ? "👏" : "📚"}
           </div>
           <div className="text-5xl font-bold gradient-text mb-2">
-            {score}/{quizQuestions.length}
+            {score}/{allQuizQuestions.length}
           </div>
           <div className="text-[#94a3b8] text-lg mb-4">
             {pct}% 정답률
@@ -73,7 +76,7 @@ export default function QuizMode() {
 
         {/* Review */}
         <div className="space-y-3 mb-6">
-          {quizQuestions.map((q, i) => (
+          {allQuizQuestions.map((q, i) => (
             <div
               key={i}
               className="glow-card p-4"
@@ -113,14 +116,14 @@ export default function QuizMode() {
       {/* Progress */}
       <div className="mb-5">
         <div className="flex justify-between text-xs text-[#94a3b8] mb-2">
-          <span>문제 {current + 1} / {quizQuestions.length}</span>
+          <span>문제 {current + 1} / {allQuizQuestions.length}</span>
           <span>현재 점수: {score}점</span>
         </div>
         <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.08)" }}>
           <div
             className="h-full rounded-full transition-all"
             style={{
-              width: `${((current) / quizQuestions.length) * 100}%`,
+              width: `${((current) / allQuizQuestions.length) * 100}%`,
               background: "linear-gradient(90deg, #00d4ff, #7c3aed)",
             }}
           />
@@ -211,7 +214,7 @@ export default function QuizMode() {
               className="w-full py-3 rounded-xl font-bold text-[#0a0f1e]"
               style={{ background: "linear-gradient(135deg, #00d4ff, #7c3aed)" }}
             >
-              {current < quizQuestions.length - 1 ? "다음 문제 →" : "결과 보기 →"}
+              {current < allQuizQuestions.length - 1 ? "다음 문제 →" : "결과 보기 →"}
             </motion.button>
           )}
         </motion.div>
